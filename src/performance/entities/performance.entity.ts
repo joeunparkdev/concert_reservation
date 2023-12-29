@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { Seat } from 'src/seat/entities/seat.entity';
@@ -27,10 +33,11 @@ export class Performance {
   @ManyToOne(() => User, (user) => user.performances)
   user: User;
 
-  @OneToMany(() => Schedule, schedule => schedule.performance, { cascade: true })
+  @OneToMany(() => Schedule, (schedule) => schedule.performance, {
+    cascade: true,
+  })
   schedules: Schedule[];
 
   // @OneToMany(() => Reservation, Reservation => Reservation.performance, { cascade: true })
   // reservations: Reservation[];
-
 }
