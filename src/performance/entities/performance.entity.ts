@@ -30,9 +30,6 @@ export class Performance {
   @OneToMany(() => Schedule, schedule => schedule.performance, { cascade: true })
   schedules: Schedule[];
 
-  @OneToMany(() => Seat, seat => seat.performance, { cascade: true })
-  seats: Seat[];
-
   // @OneToMany(() => Reservation, Reservation => Reservation.performance, { cascade: true })
   // reservations: Reservation[];
 

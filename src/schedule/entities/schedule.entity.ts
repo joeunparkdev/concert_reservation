@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Performance } from 'src/performance/entities/performance.entity';
+import { Seat } from 'src/seat/entities/seat.entity';
 
 @Entity()
 export class Schedule {
@@ -14,4 +15,9 @@ export class Schedule {
 
   @Column({ name: 'is_booking_allowed' }) 
   isBookingAllowed: boolean;
+
+  @OneToMany(() => Seat, (seat) => seat.schedule, { cascade: true })
+  seats: Seat[];
+
+
 }

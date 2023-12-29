@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Performance } from 'src/performance/entities/performance.entity';
+import { Schedule } from 'src/schedule/entities/schedule.entity';
 
 @Entity()
 export class Seat {
@@ -12,6 +13,6 @@ export class Seat {
   @Column({ name: 'is_available' }) 
   isAvailable: boolean;
 
-  @ManyToOne(() => Performance, (performance) => performance.seats)
-  performance: Performance;
+  @ManyToOne(() => Schedule, (schedule) => schedule.seats) 
+  schedule: Schedule;
 }
