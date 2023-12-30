@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
@@ -21,27 +29,33 @@ export class PerformanceController {
   }
 
   @Get('search')
-async searchPerformancesByName(@Query('name') name: string) {
-  return this.performanceService.getPerformancesByName(name);
-}
+  async searchPerformancesByName(@Query('name') name: string) {
+    return this.performanceService.getPerformancesByName(name);
+  }
 
   @Get(':id')
   async getPerformanceDetails(@Param('id') id: number) {
     return this.performanceService.getPerformanceDetails(id);
   }
-  
+
   @ApiHeader({
-  name: 'token'
-})
-@ApiOkResponse({
-status:200
-})
+    name: 'token',
+  })
+  @ApiOkResponse({
+    status: 200,
+  })
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  createPerformance(@UserInfo() user: User, @Body() data: PerformanceDto): Promise<Performance> {
-    console.log('User:', { id: user.id, email: user.email, isAdmin: user.isAdmin });
+  createPerformance(
+    @UserInfo() user: User,
+    @Body() data: PerformanceDto,
+  ): Promise<Performance> {
+    console.log('User:', {
+      id: user.id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
 
     return this.performanceService.createPerformance(user, data);
   }
-  
 }

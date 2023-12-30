@@ -1,5 +1,13 @@
 import { Seat } from 'src/seat/entities/seat.entity';
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, OneToOne } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  Column,
+  ManyToOne,
+} from 'typeorm';
 
 @Entity()
 export class Reservation {
@@ -7,9 +15,10 @@ export class Reservation {
   id: number;
 
   @OneToOne(() => Seat)
+  @JoinColumn({ name: 'seatId' })
   seat: Seat;
 
-  @Column()
-  userId: number;
-
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

@@ -13,7 +13,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PerformanceModule } from './performance/performance.module';
 import { ScheduleModule } from './schedule/schedule.module';
-import { AdminController } from './guards/admin-guard.controller';
+import { AdminController } from './guards/guard.controller';
 import { ReservationModule } from './reservation/reservation.module';
 import { SeatModule } from './seat/seat.module';
 
