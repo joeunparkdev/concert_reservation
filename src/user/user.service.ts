@@ -23,12 +23,13 @@ export class UserService {
     await this.userRepository.save({
       email,
       password: hashedPassword,
+      point: 1000000,
     });
   }
 
   async login(email: string, password: string) {
     const user = await this.userRepository.findOne({
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'password', 'point'],
       where: { email },
     });
     if (!user || !(await compare(password, user.password))) {

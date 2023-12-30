@@ -1,42 +1,42 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ReservationDto } from './dto/reservation.dto';
 import { PerformanceService } from '../performance/performance.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
+import { Seat } from 'src/seat/entities/seat.entity';
+import { SeatDto } from 'src/seat/dto/seat.dto';
 
 @Injectable()
 export class ReservationService {
   constructor(
-    private readonly performanceService: PerformanceService,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
+    @InjectRepository(Seat)
+    private readonly seatRepository: Repository<Seat>,
   ) {}
 
-  async reserveShow(reservation: ReservationDto, userId: number): Promise<ReservationDto> {
-    const { performance, isBookingAvailable } = await this.performanceService.getPerformanceDetails(reservation.performanceId);
+  //예매 가능 좌석 정보 반환
+  async getAvailableSeats(): Promise<SeatDto[]> {
+    const seats = await this.seatRepository.find({
+      where: {
+        is_available: true,
+      },
+    });
 
-    if (!isBookingAvailable) {
-      throw new BadRequestException('Booking not available for the selected performance.');
+    if (!seats || seats.length === 0) {
+      throw new NotFoundException('Seats not found');
     }
 
-    // 예약 정보 저장 로직 추가
-    const newReservation: Reservation = {
-        userId,
-        performance,
-        id: 0,
-    };
-
-    // 데이터베이스에 저장
-    const savedReservation = await this.reservationRepository.save(newReservation);
-
-    // 예약 정보에 퍼포먼스 정보 추가
-    const reservationDto: ReservationDto = {
-        ...reservation,
-        reservationId: savedReservation.id,
-        userId: savedReservation.userId,
-        performance: savedReservation.performance,
-      };
-    return reservationDto;
+    return seats.map((seat) => ({
+      id: seat.id,
+      seat_number: seat.seat_number,
+      is_available: seat.is_available,
+      price: seat.price,
+    }));
   }
 }

@@ -25,6 +25,10 @@ export class User {
   @Column({ type: 'boolean', default: false })
   isAdmin: boolean;
 
+
+  @Column({ type: 'int', default: 0 })
+  point: number;  
+
   @OneToMany(() => Performance, (performance) => performance.user)
   performances: Performance[];
 }

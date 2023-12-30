@@ -105,7 +105,8 @@ export class PerformanceService {
 
           const seat = new Seat();
           seat.seat_number = seatData.seat_number;
-          seat.isAvailable = seatData.is_available || false;
+          seat.is_available = seatData.is_available || false;
+          seat.price = seatData.price;
           seats.push(seat);
         }
         schedule.seats = seats;
@@ -176,7 +177,8 @@ export class PerformanceService {
         if (seat) {
           // seat 업데이트
           seat.seat_number = seatData.seat_number;
-          seat.isAvailable = seatData.is_available;
+          seat.is_available = seatData.is_available;
+          seat.price = seatData.price;
           await this.performanceSeatsRepository.save(seat);
         }
       }

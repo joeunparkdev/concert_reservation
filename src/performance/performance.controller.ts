@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
+import { PerformanceDto } from './dto/performance.dto';
 import { Performance } from './entities/performance.entity';
 import { PerformanceService } from './performance.service';
 
@@ -37,7 +38,7 @@ status:200
 })
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  createPerformance(@UserInfo() user: User, @Body() data: any): Promise<Performance> {
+  createPerformance(@UserInfo() user: User, @Body() data: PerformanceDto): Promise<Performance> {
     console.log('User:', { id: user.id, email: user.email, isAdmin: user.isAdmin });
 
     return this.performanceService.createPerformance(user, data);
