@@ -34,7 +34,6 @@ export class ReservationController {
     @Req() request: Request,
   ): Promise<void> {
     const userId = user.id;
-    console.log('reservation user=' + user);
     await this.reservationService.reserveSeat(seatId, userId);
   }
 }

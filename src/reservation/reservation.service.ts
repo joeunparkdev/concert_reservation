@@ -53,7 +53,7 @@ export class ReservationService {
       'SERIALIZABLE',
       async (txManager) => {
         // 좌석 정보 조회
-        const seat = await this.seatRepository.findOneOrFail({
+        const seat = await txManager.findOneOrFail(Seat, {
           where: { id: seatId },
         });
 
@@ -65,7 +65,7 @@ export class ReservationService {
         }
 
         // 사용자 정보 조회
-        const user = await this.userRepository.findOneOrFail({
+        const user = await txManager.findOneOrFail(User,{
           where: { id: userId },
         });
 
@@ -77,18 +77,18 @@ export class ReservationService {
           );
         }
         user.point -= ticketPrice;
-        await this.userRepository.save(user);
+        await txManager.save(user);
 
         // 좌석 예매 처리
         seat.is_available = false;
-        await this.seatRepository.save(seat);
+        await txManager.save(seat);
 
         // 예매 생성
-        const reservation = this.reservationRepository.create({
+        const reservation = txManager.create(Reservation,{
           seat: seat,
           user: user,
         });
-        await this.reservationRepository.save(reservation);
+        await txManager.save(reservation);
       },
     );
   }
