@@ -31,9 +31,6 @@ export class Performance {
   @Column()
   category: string;
 
-  // @ManyToOne(() => User, (user) => user.performances)
-  // user: User;
-
   @OneToMany(() => Schedule, (schedule) => schedule.performance, {
     cascade: true,
   })

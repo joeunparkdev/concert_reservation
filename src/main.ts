@@ -19,15 +19,20 @@ async function bootstrap() {
     .setTitle('Concert')
     .setDescription('concert')
     .setVersion('1.0')
+    .addBearerAuth({type: 'http', scheme: 'bearer', bearerFormat:'jwt'  })
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup('swagger', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      tagsSorter: 'alpha',
+      operationSorter: 'alpha',
+    },
+});
+const userService = app.get(UserService);
+await userService.createInitialAdmin();
 
-  const userService = app.get(UserService);
-  await userService.createInitialAdmin();
-
-  await app.listen(3000);
+await app.listen(3000);
 }
-
 bootstrap();

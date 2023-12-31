@@ -22,11 +22,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  /**  email
+  @example "example@example.com" */
   @IsEmail()
   @IsNotEmpty({ message: '이메일을 입력해주세요.' })
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
+
+  /**  password
+  @example "examplePassword" */
   //@IsStrongPassword()
   @IsString()
   @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })

@@ -9,13 +9,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
-import { ApiHeader } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtCustomerAuthGuard } from 'src/guards/customer.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
 import { ReservationService } from './reservation.service';
 
+@ApiTags('Reservation')
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
@@ -27,15 +28,13 @@ export class ReservationController {
   }
 
   //list loggedin user's reservation history
-  @ApiHeader({
-    name: 'token',
-  })
+  @ApiBearerAuth()
   @UseGuards(JwtCustomerAuthGuard)
   @Get('my-reservation-history')
-  async getReservationList(   
+  async getReservationList(
     @UserInfo() user: User,
     @Req() request: Request,
-  ):Promise<any> {
+  ): Promise<any> {
     const userId = user.id;
     console.log(user);
     console.log(userId);
@@ -43,9 +42,7 @@ export class ReservationController {
   }
 
   //make a reservation
-  @ApiHeader({
-    name: 'token',
-  })
+  @ApiBearerAuth()
   @UseGuards(JwtCustomerAuthGuard)
   @Post()
   async reserveSeat(
@@ -57,15 +54,13 @@ export class ReservationController {
     await this.reservationService.reserveSeat(seatId, userId);
   }
 
-  //cancel reservation 
-  @ApiHeader({
-    name: 'token',
-  })
+  //cancel reservation
+  @ApiBearerAuth()
   @UseGuards(JwtCustomerAuthGuard)
   @Delete(':reservationId')
   async cancelReservation(
     @UserInfo() user: User,
-    @Param('reservationId') reservationId: number, 
+    @Param('reservationId') reservationId: number,
     @Req() request: Request,
   ): Promise<void> {
     const userId = user.id;
