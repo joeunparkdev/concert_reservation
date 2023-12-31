@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
+import { AdminGuard } from 'src/guards/admin.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
 import { PerformanceDto } from './dto/performance.dto';
@@ -44,17 +46,12 @@ export class PerformanceController {
   @ApiOkResponse({
     status: 200,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AdminGuard)
   @Post()
   createPerformance(
     @UserInfo() user: User,
     @Body() data: PerformanceDto,
   ): Promise<Performance> {
-    console.log('User:', {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
 
     return this.performanceService.createPerformance(user, data);
   }

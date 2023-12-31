@@ -1,9 +1,10 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Admin, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { compare, hash } from 'bcrypt';
+import { Role } from './types/userRole.type';
 
 @Injectable()
 export class UserService {
@@ -42,7 +43,7 @@ export class UserService {
     };
   }
 
-  async registerAdmin(email: string, password: string) {
+  async registerInitialAdmin(email: string, password: string) {
     const existingAdmin = await this.userRepository.findOne({ where: { isAdmin: true } });
 
     if (existingAdmin) {
@@ -55,6 +56,8 @@ export class UserService {
       email,
       password: hashedPassword,
       isAdmin: true,
+      role: Role.Admin,
+      point:0,
     });
 
     await this.userRepository.save(adminUser);
@@ -71,6 +74,7 @@ export class UserService {
         email: 'admin@example.com',
         password: hashedPassword,
         isAdmin: true,
+        role: Role.Admin,
       });
   
       await this.userRepository.save(adminUser);
@@ -90,6 +94,8 @@ export class UserService {
   
     if (user) {
       user.isAdmin = true;
+      user.role = Role.Admin;
+      user.point =0;
       await this.userRepository.save(user);
       console.log(`Admin role granted for user with ID ${id}`);
     }

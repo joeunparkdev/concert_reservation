@@ -7,6 +7,7 @@ import {
   JoinColumn,
   Column,
   ManyToOne,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity()
@@ -14,11 +15,17 @@ export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'int' })
+  seatId: number;
+
+  @Column({ type: 'int' })
+  userId: number;
+
   @OneToOne(() => Seat)
-  @JoinColumn({ name: 'seatId' })
+  @JoinColumn()
   seat: Seat;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn()
   user: User;
 }

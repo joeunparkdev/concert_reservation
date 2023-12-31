@@ -12,7 +12,7 @@ export class AdminController {
     name: 'token',
   })
   @Post('grant-admin-role')
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(AdminGuard)
   async grantAdminRole(@Body() { id }: { id: number }) {
     console.log('grantAdminRole method called with ID:', id);
 

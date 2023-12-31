@@ -6,6 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { RegisterDto } from './dto/register.dto';
 
 
 @Controller('user')
@@ -13,8 +14,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  async register(@Body() loginDto: LoginDto) {
-    return await this.userService.register(loginDto.email, loginDto.password);
+  async register(@Body() registerDto: RegisterDto) {
+    return await this.userService.register(registerDto.email, registerDto.password);
   }
 
   @Post('login')
@@ -27,6 +28,7 @@ export class UserController {
   getId(@UserInfo() user: User) {
     return { id: user.id };
   }
+  
   @UseGuards(AuthGuard('jwt'))
   @Get('email')
   getEmail(@UserInfo() user: User) {

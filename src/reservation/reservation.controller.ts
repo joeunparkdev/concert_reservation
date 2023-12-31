@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -19,21 +20,55 @@ import { ReservationService } from './reservation.service';
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
+  //list available seats
   @Get()
   async availableSeats(): Promise<any> {
     return this.reservationService.getAvailableSeats();
   }
+
+  //list loggedin user's reservation history
   @ApiHeader({
     name: 'token',
   })
-  @UseGuards(JwtAuthGuard)
-  @Post(':seatId')
+  @UseGuards(JwtCustomerAuthGuard)
+  @Get('my-reservation-history')
+  async getReservationList(   
+    @UserInfo() user: User,
+    @Req() request: Request,
+  ):Promise<any> {
+    const userId = user.id;
+    console.log(user);
+    console.log(userId);
+    return this.reservationService.getReservationList(userId);
+  }
+
+  //make a reservation
+  @ApiHeader({
+    name: 'token',
+  })
+  @UseGuards(JwtCustomerAuthGuard)
+  @Post()
   async reserveSeat(
     @UserInfo() user: User,
-    @Param('seatId') seatId: number,
+    @Body('seatId') seatId: number,
     @Req() request: Request,
   ): Promise<void> {
     const userId = user.id;
     await this.reservationService.reserveSeat(seatId, userId);
+  }
+
+  //cancel reservation 
+  @ApiHeader({
+    name: 'token',
+  })
+  @UseGuards(JwtCustomerAuthGuard)
+  @Delete(':reservationId')
+  async cancelReservation(
+    @UserInfo() user: User,
+    @Param('reservationId') reservationId: number, 
+    @Req() request: Request,
+  ): Promise<void> {
+    const userId = user.id;
+    await this.reservationService.cancelReservation(reservationId, userId);
   }
 }

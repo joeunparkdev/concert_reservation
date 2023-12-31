@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Schedule } from 'src/schedule/entities/schedule.entity';
@@ -30,8 +31,8 @@ export class Performance {
   @Column()
   category: string;
 
-  @ManyToOne(() => User, (user) => user.performances)
-  user: User;
+  // @ManyToOne(() => User, (user) => user.performances)
+  // user: User;
 
   @OneToMany(() => Schedule, (schedule) => schedule.performance, {
     cascade: true,

@@ -10,9 +10,10 @@ import { SeatRepository } from '../seat/entities/seat.repository';
 import { PerformanceRepository } from './entities/performance.repository'; 
 import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { Seat } from 'src/seat/entities/seat.entity';
+import { User } from 'src/user/entities/user.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Performance,Seat,Schedule]),
+    TypeOrmModule.forFeature([Performance, Seat,Schedule]),
   ],
   controllers: [PerformanceController],
   providers: [PerformanceService], 
