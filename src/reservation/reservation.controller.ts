@@ -14,6 +14,7 @@ import { JwtCustomerAuthGuard } from 'src/guards/customer.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
+import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ReservationService } from './reservation.service';
 
 @ApiTags('Reservation')
@@ -29,34 +30,33 @@ export class ReservationController {
 
   //list loggedin user's reservation history
   @ApiBearerAuth()
-  @UseGuards(JwtCustomerAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('my-reservation-history')
   async getReservationList(
     @UserInfo() user: User,
     @Req() request: Request,
   ): Promise<any> {
     const userId = user.id;
-    console.log(user);
-    console.log(userId);
     return this.reservationService.getReservationList(userId);
   }
 
   //make a reservation
   @ApiBearerAuth()
-  @UseGuards(JwtCustomerAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async reserveSeat(
     @UserInfo() user: User,
-    @Body('seatId') seatId: number,
+    @Body() createReservationDto: CreateReservationDto,
     @Req() request: Request,
   ): Promise<void> {
     const userId = user.id;
+    const { seatId } = createReservationDto;
     await this.reservationService.reserveSeat(seatId, userId);
   }
 
   //cancel reservation
   @ApiBearerAuth()
-  @UseGuards(JwtCustomerAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':reservationId')
   async cancelReservation(
     @UserInfo() user: User,

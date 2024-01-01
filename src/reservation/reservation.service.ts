@@ -8,7 +8,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, EntityNotFoundError, getManager, Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
 import { Seat } from 'src/seat/entities/seat.entity';
-import { SeatDto } from 'src/seat/dto/seat.dto';
+import { CreateSeatDto } from 'src/seat/dto/create-seat.dto';
 import { Transaction } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
@@ -28,7 +28,7 @@ export class ReservationService {
   ) {}
 
   //예매 가능 좌석들 리스트 나열
-  async getAvailableSeats(): Promise<SeatDto[]> {
+  async getAvailableSeats(): Promise<CreateSeatDto[]> {
     const seats = await this.seatRepository.find({
       where: {
         is_available: true,

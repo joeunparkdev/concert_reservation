@@ -11,7 +11,7 @@ export class Seat {
   @Column()
   seat_number: string;
 
-  @Column({ name: 'is_available' }) 
+  @Column({ type: 'boolean', default: true}) 
   is_available: boolean;
 
   @Column()

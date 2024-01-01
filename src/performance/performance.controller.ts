@@ -8,12 +8,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
-import { PerformanceDto } from './dto/performance.dto';
+import { CreatePerformanceDto } from './dto/create-performance.dto';
 import { Performance } from './entities/performance.entity';
 import { PerformanceService } from './performance.service';
 
@@ -23,12 +28,8 @@ export class PerformanceController {
   constructor(private readonly performanceService: PerformanceService) {}
 
   @Get()
-  async getAllPerformances(@Query('name') name?: string) {
-    if (name) {
-      return this.performanceService.getPerformancesByName(name);
-    } else {
-      return this.performanceService.getAllPerformances();
-    }
+  async getAllPerformances() {
+    return this.performanceService.getAllPerformances();
   }
 
   @Get('search')
@@ -41,17 +42,12 @@ export class PerformanceController {
     return this.performanceService.getPerformanceDetails(id);
   }
 
-  @ApiHeader({
-    name: 'token',
-  })
-  @ApiOkResponse({
-    status: 200,
-  })
+  @ApiBearerAuth()
   @UseGuards(AdminGuard)
   @Post()
   createPerformance(
     @UserInfo() user: User,
-    @Body() data: PerformanceDto,
+    @Body() data: CreatePerformanceDto,
   ): Promise<Performance> {
     return this.performanceService.createPerformance(user, data);
   }

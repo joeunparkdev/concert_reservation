@@ -98,14 +98,13 @@ export class PerformanceService {
               'Invalid seat data. Please provide a valid seat_number.',
             );
           }
-          if (seatData.price >50000) {
+          if (seatData.price > 50000) {
             throw new BadRequestException(
               'The price has to be lower than 50000',
             );
           }
           const seat = new Seat();
           seat.seat_number = seatData.seat_number;
-          seat.is_available = seatData.is_available || false;
           seat.price = seatData.price;
           seats.push(seat);
         }
