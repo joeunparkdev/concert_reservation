@@ -15,6 +15,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserInfo } from 'src/utils/userInfo.decorator';
 import { CreateReservationDto } from './dto/create-reservation.dto';
+import { Reservation } from './entities/reservation.entity';
 import { ReservationService } from './reservation.service';
 
 @ApiTags('Reservation')
@@ -23,15 +24,15 @@ export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   //list available seats
-  @Get()
+  @Get('available-seats')
   async availableSeats(): Promise<any> {
     return this.reservationService.getAvailableSeats();
   }
 
-  //list loggedin user's reservation history
+  //list loggedin user's reservation list
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get('my-reservation-history')
+  @Get('my-reservation-list')
   async getReservationList(
     @UserInfo() user: User,
     @Req() request: Request,
@@ -48,10 +49,10 @@ export class ReservationController {
     @UserInfo() user: User,
     @Body() createReservationDto: CreateReservationDto,
     @Req() request: Request,
-  ): Promise<void> {
+  ): Promise<Reservation> {
     const userId = user.id;
     const { seatId } = createReservationDto;
-    await this.reservationService.reserveSeat(seatId, userId);
+    return await this.reservationService.reserveSeat(seatId, userId);
   }
 
   //cancel reservation
@@ -62,8 +63,11 @@ export class ReservationController {
     @UserInfo() user: User,
     @Param('reservationId') reservationId: number,
     @Req() request: Request,
-  ): Promise<void> {
+  ): Promise<String> {
     const userId = user.id;
-    await this.reservationService.cancelReservation(reservationId, userId);
+    return await this.reservationService.cancelReservation(
+      reservationId,
+      userId,
+    );
   }
 }

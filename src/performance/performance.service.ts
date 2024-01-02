@@ -10,6 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Performance } from './entities/performance.entity';
 import { Schedule } from '../schedule/entities/schedule.entity';
 import { Seat } from '../seat/entities/seat.entity';
+import { CreatePerformanceDto } from './dto/create-performance.dto';
 
 @Injectable()
 export class PerformanceService {
@@ -58,7 +59,10 @@ export class PerformanceService {
     };
   }
 
-  async createPerformance(user: User, data: any): Promise<Performance> {
+  async createPerformance(
+    user: User,
+    data: CreatePerformanceDto,
+  ): Promise<Performance> {
     if (!user.isAdmin) {
       throw new UnauthorizedException(
         'You do not have permission to create a new performance.',
@@ -66,7 +70,6 @@ export class PerformanceService {
     }
 
     let schedules = [];
-
     // Performance 엔터티 생성
     const performance = new Performance();
 
